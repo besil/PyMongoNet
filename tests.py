@@ -89,7 +89,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertEquals(self.g[1]["edges"], [{"node": 2, "edge": 0}])
         self.assertEquals(self.g[2]["edges"], [{"node": 1, "edge": 0}])
 
-        expected_edge = {"_id": 0, "weight": 1.0, "rel_type": "love"}
+        expected_edge = {"_id": 0, "src": 1, "dst": 2, "weight": 1.0, "rel_type": "love"}
         self.assertEquals(self.g.get_edge(edgeId=0), expected_edge)
         self.assertEquals(self.g.get_edge(edgeId=0), expected_edge)
 
