@@ -9,13 +9,14 @@ import unittest
 class TestStringMethods(unittest.TestCase):
     def setUp(self):
         self.db_name = "test_db"
-        self.graph_collection = graph_collection
-        self.graph_edges = graph_edges
         self.cl = MongoClient()
         self.g = Graph(db_name=self.db_name, conn=self.cl)
-        self.test_coll = self.cl.get_database(self.db_name).get_collection(self.graph_collection)
+        self.db = self.cl.get_database(self.db_name)
+        self.graph_coll = self.db.get_collection(graph_collection)
+        self.graph_edges = self.db.get_collection(graph_edges)
 
     def tearDown(self):
+        self.cl.drop_database(self.db_name)
         self.cl.close()
 
     def test_add_node(self):
