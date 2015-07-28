@@ -49,6 +49,17 @@ class TestStringMethods(unittest.TestCase):
 
         self.g.add_edge(src=1, dst=2, weight=1.0, rel_type="love")
         self.assertEquals(1, self.graph_edges.count())
+        edge = self.g.get_edge(0)
+
+        expected_edge = {
+            "_id": 0,
+            "src": 1,
+            "dst": 2,
+            "weight": 1.0,
+            "rel_type": "love"
+        }
+
+        self.assertEquals(edge, expected_edge, msg="Edge[0] is different from expected!")
 
         silvio = self.g[1]
         aurora = self.g[2]
@@ -57,20 +68,20 @@ class TestStringMethods(unittest.TestCase):
             "_id": 1,
             "name": "Silvio",
             "neighs": [2],
-            "edges": [(2, 0)]
+            "edges": {"node": 2, "edge": 0}
         }
         aurora_expected = {
             "_id": 2,
             "name": "Aurora",
             "neighs": [1],
-            "edges": [(1, 0)]
+            "edges": {"node": 1, "edge": 0}
         }
 
         self.assertEqual(silvio, silvio_expected, msg="Silvio is different from the expected")
         self.assertEqual(aurora, aurora_expected, msg="Aurora is different from the expected")
 
-        self.assertTrue(self.g.are_connected(src=1, dst=2))
-        self.assertTrue(self.g.are_connected(src=2, dst=1))
+        self.assertTrue(self.g.are_connected(src=1, dst=2), msg="Silvio and Aurora are not connected!")
+        self.assertTrue(self.g.are_connected(src=2, dst=1), msg="Silvio and Aurora are not connected!")
 
         self.assertEqual(self.g[1]["neighs"], [2])
         self.assertEqual(self.g[2]["neighs"], [1])
