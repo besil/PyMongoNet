@@ -73,6 +73,7 @@ class Graph(object):
 
         self.graph.delete_one({"_id": id})
         for edge in edges:
+            self.edge_count -= 1
             self.graph_edges.delete_one({"_id": edge})
 
         for neigh in neighs:
