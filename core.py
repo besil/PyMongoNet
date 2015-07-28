@@ -68,7 +68,7 @@ class Graph(object):
         return self.graph_edges.find_one({self.graph_id: edgeId})
 
     def contains(self, id):
-        return sum([1 for _ in self.graph.find({self.graph_id: id})]) == 1
+        return self.graph.find_one({self.graph_id: id}) is not None
 
     def remove(self, id):
         node = self[id]
