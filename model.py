@@ -48,10 +48,10 @@ class Graph(object):
         self.graph_edges.insert(edge_doc)
 
         self.graph.update_one({"_id": src}, {"$push": {"neighs": dst}})
-        self.graph.update_one({"_id": src}, {"$push": {"edges": {"node": dst, "edge": edgeId}}})
+        self.graph.update_one({"_id": src}, {"$push": {"edges": edgeId}})
 
         self.graph.update_one({"_id": dst}, {"$push": {"neighs": src}})
-        self.graph.update_one({"_id": dst}, {"$push": {"edges": {"node": src, "edge": edgeId}}})
+        self.graph.update_one({"_id": dst}, {"$push": {"edges": edgeId}})
 
     def are_connected(self, src, dst):
         return dst in self[src]['neighs'] or src in self[dst]['neighs']
@@ -61,3 +61,8 @@ class Graph(object):
 
     def __getitem__(self, id):
         return self.graph.find_one({"_id": id})
+
+    def remove(self, id):
+        node = self[id]
+
+        print(node)

@@ -31,13 +31,21 @@ class TestStringMethods(unittest.TestCase):
 
     def test_delete_node(self):
         self.g.add_node(id=1, name="Silvio")
-        self.assertEquals(1, self.graph_coll.count({"_id": 1}))
+        self.g.add_node(id=2, name="Aurora")
 
-        self.g.remove[1]
+        self.g.add_edge(src=1, dst=2)
+
+        self.assertEquals(1, self.graph_coll.count({"_id": 1}))
+        self.assertEquals(2, self.graph_coll.count())
+
+        self.g.remove(id=1)
         self.assertEquals(0, self.graph_coll.count({"_id": 1}))
+        self.assertEquals(1, self.graph_coll.count())
 
         self.assertFalse(self.g.contains(1))
-        self.assertEqual(self.g[1], dict(), msg="Found something when nothing should be found")
+        self.assertEqual(self.g[1], None, msg="Found something when nothing should be found")
+
+        self.assertTrue(1 not in self.g[1]["neighs"])
 
     def test_add_edge(self):
         self.g.add_node(id=1, name="Silvio")
@@ -68,13 +76,13 @@ class TestStringMethods(unittest.TestCase):
             "_id": 1,
             "name": "Silvio",
             "neighs": [2],
-            "edges": [{"node": 2, "edge": 0}]
+            "edges": [0]
         }
         aurora_expected = {
             "_id": 2,
             "name": "Aurora",
             "neighs": [1],
-            "edges": [{"node": 1, "edge": 0}]
+            "edges": [0]
         }
 
         self.assertEqual(silvio, silvio_expected, msg="Silvio is different from the expected")
@@ -83,11 +91,13 @@ class TestStringMethods(unittest.TestCase):
         self.assertTrue(self.g.are_connected(src=1, dst=2), msg="Silvio and Aurora are not connected!")
         self.assertTrue(self.g.are_connected(src=2, dst=1), msg="Silvio and Aurora are not connected!")
 
-        self.assertEqual(self.g[1]["neighs"], [2])
-        self.assertEqual(self.g[2]["neighs"], [1])
+        self.assertEqual(self.g[1]["neighs"], silvio_expected['neighs'])
+        self.assertEqual(self.g[2]["neighs"], aurora_expected['neighs'])
 
-        self.assertEquals(self.g[1]["edges"], [{"node": 2, "edge": 0}])
-        self.assertEquals(self.g[2]["edges"], [{"node": 1, "edge": 0}])
+        # self.assertEquals(self.g[1]["edges"], [{"node": 2, "edge": 0}])
+        # self.assertEquals(self.g[2]["edges"], [{"node": 1, "edge": 0}])
+        self.assertEquals(self.g[1]["edges"], silvio_expected['edges'])
+        self.assertEquals(self.g[2]["edges"], aurora_expected['edges'])
 
         expected_edge = {"_id": 0, "src": 1, "dst": 2, "weight": 1.0, "rel_type": "love"}
         self.assertEquals(self.g.get_edge(edgeId=0), expected_edge)
