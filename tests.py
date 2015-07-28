@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 
-from model import Graph
+from model import Graph, graph_collection, graph_edges
 
 __author__ = 'besil'
 import unittest
@@ -9,8 +9,8 @@ import unittest
 class TestStringMethods(unittest.TestCase):
     def setUp(self):
         self.db_name = "test_db"
-        self.graph_collection = "nodes"
-        self.graph_edges = "edges"
+        self.graph_collection = graph_collection
+        self.graph_edges = graph_edges
         self.cl = MongoClient()
         self.g = Graph(db_name=self.db_name, conn=self.cl)
         self.test_coll = self.cl.get_database(self.db_name).get_collection(self.graph_collection)
