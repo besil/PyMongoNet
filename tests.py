@@ -42,10 +42,11 @@ class TestStringMethods(unittest.TestCase):
         self.assertEquals(0, self.graph_coll.count({"_id": 1}))
         self.assertEquals(1, self.graph_coll.count())
 
-        self.assertFalse(self.g.contains(1))
+        self.assertFalse(self.g.contains(id=1))
         self.assertEqual(self.g[1], None, msg="Found something when nothing should be found")
 
-        self.assertTrue(1 not in self.g[1]["neighs"])
+        self.assertTrue(1 not in self.g[2]["neighs"])
+        self.assertTrue(0 not in self.g[2]["edges"])
 
     def test_add_edge(self):
         self.g.add_node(id=1, name="Silvio")

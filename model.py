@@ -62,7 +62,22 @@ class Graph(object):
     def __getitem__(self, id):
         return self.graph.find_one({"_id": id})
 
+    def contains(self, id):
+        return sum([1 for _ in self.graph.find({"_id": id})]) == 1
+
     def remove(self, id):
         node = self[id]
 
-        print(node)
+        edges = node['edges']
+        neighs = node['neighs']
+
+        self.graph.delete_one({"_id": id})
+        for edge in edges:
+            self.graph_edges.delete_one({"_id": edge})
+
+        for neigh in neighs:
+            neigh_doc = self[neigh]
+            neigh_doc['neighs'].remove(id)
+            for edge in edges:
+                neigh_doc['edges'].remove(edge)
+            self.graph.replace_one({"_id": neigh}, neigh_doc)
