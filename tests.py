@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 
-from core import Graph, graph_collection, graph_edges, neigh_attr, edges_attr
+from core import Graph, graph_collection, graph_edges
 import unittest
 
 __author__ = 'besil'
@@ -21,11 +21,11 @@ class TestStringMethods(unittest.TestCase):
     def test_add_node(self):
         self.g.add_node(id=1, name="Silvio")
         expected = {
-            "_id": 1,
+            self.g.graph_id: 1,
             "name": "Silvio",
         }
         self.assertEqual(self.g[1], expected, msg="Node and expected are different!")
-        self.assertEquals(1, self.graph_coll.count({"_id": 1}))
+        self.assertEquals(1, self.graph_coll.count({self.g.graph_id: 1}))
 
     def test_delete_node(self):
         self.g.add_node(id=1, name="Silvio")
@@ -33,25 +33,25 @@ class TestStringMethods(unittest.TestCase):
 
         self.g.add_edge(src=1, dst=2)
 
-        self.assertEquals(1, self.graph_coll.count({"_id": 1}))
+        self.assertEquals(1, self.graph_coll.count({self.g.graph_id: 1}))
         self.assertEquals(2, self.graph_coll.count())
 
         self.g.remove(id=1)
-        self.assertEquals(0, self.graph_coll.count({"_id": 1}))
+        self.assertEquals(0, self.graph_coll.count({self.g.graph_id: 1}))
         self.assertEquals(1, self.graph_coll.count())
 
         self.assertFalse(self.g.contains(id=1))
         self.assertEqual(self.g[1], None, msg="Found something when nothing should be found")
 
-        self.assertTrue(1 not in self.g[2][neigh_attr])
-        self.assertTrue(0 not in self.g[2][edges_attr])
+        self.assertTrue(1 not in self.g[2][self.g.neigh_attr])
+        self.assertTrue(0 not in self.g[2][self.g.edges_attr])
 
     def test_add_edge(self):
         self.g.add_node(id=1, name="Silvio")
         self.g.add_node(id=2, name="Aurora")
 
-        self.assertEquals(1, self.graph_coll.count({"_id": 1}))
-        self.assertEquals(1, self.graph_coll.count({"_id": 2}))
+        self.assertEquals(1, self.graph_coll.count({self.g.graph_id: 1}))
+        self.assertEquals(1, self.graph_coll.count({self.g.graph_id: 2}))
         self.assertEquals(2, self.graph_coll.count())
 
         self.g.add_edge(src=1, dst=2, weight=1.0, rel_type="love")
@@ -59,7 +59,7 @@ class TestStringMethods(unittest.TestCase):
         edge = self.g.get_edge(0)
 
         expected_edge = {
-            "_id": 0,
+            self.g.graph_id: 0,
             "src": 1,
             "dst": 2,
             "weight": 1.0,
@@ -72,16 +72,16 @@ class TestStringMethods(unittest.TestCase):
         aurora = self.g[2]
 
         silvio_expected = {
-            "_id": 1,
+            self.g.graph_id: 1,
             "name": "Silvio",
-            neigh_attr: [2],
-            edges_attr: [0]
+            self.g.neigh_attr: [2],
+            self.g.edges_attr: [0]
         }
         aurora_expected = {
-            "_id": 2,
+            self.g.graph_id: 2,
             "name": "Aurora",
-            neigh_attr: [1],
-            edges_attr: [0]
+            self.g.neigh_attr: [1],
+            self.g.edges_attr: [0]
         }
 
         self.assertEqual(silvio, silvio_expected, msg="Silvio is different from the expected")
@@ -90,13 +90,13 @@ class TestStringMethods(unittest.TestCase):
         self.assertTrue(self.g.are_connected(src=1, dst=2), msg="Silvio and Aurora are not connected!")
         self.assertTrue(self.g.are_connected(src=2, dst=1), msg="Silvio and Aurora are not connected!")
 
-        self.assertEqual(self.g[1][neigh_attr], silvio_expected[neigh_attr])
-        self.assertEqual(self.g[2][neigh_attr], aurora_expected[neigh_attr])
+        self.assertEqual(self.g[1][self.g.neigh_attr], silvio_expected[self.g.neigh_attr])
+        self.assertEqual(self.g[2][self.g.neigh_attr], aurora_expected[self.g.neigh_attr])
 
-        self.assertEquals(self.g[1][edges_attr], silvio_expected[edges_attr])
-        self.assertEquals(self.g[2][edges_attr], aurora_expected[edges_attr])
+        self.assertEquals(self.g[1][self.g.edges_attr], silvio_expected[self.g.edges_attr])
+        self.assertEquals(self.g[2][self.g.edges_attr], aurora_expected[self.g.edges_attr])
 
-        expected_edge = {"_id": 0, "src": 1, "dst": 2, "weight": 1.0, "rel_type": "love"}
+        expected_edge = {self.g.graph_id: 0, "src": 1, "dst": 2, "weight": 1.0, "rel_type": "love"}
         self.assertEquals(self.g.get_edge(edgeId=0), expected_edge)
         self.assertEquals(self.g.get_edge(edgeId=0), expected_edge)
 
@@ -105,9 +105,9 @@ class TestStringMethods(unittest.TestCase):
         self.g.add_node(id=2)
 
         expected_nodes = [{
-            "_id": 1,
+            self.g.graph_id: 1,
         }, {
-            "_id": 2,
+            self.g.graph_id: 2,
         }]
 
         for n in self.g.nodes():
@@ -116,9 +116,14 @@ class TestStringMethods(unittest.TestCase):
     def test_incremental_add(self):
         self.g.add_edge(src=1, dst=2)
 
-        expected_silvio = {
-            "_id": "silvio",
-        }
+        self.assertEquals( self.g[1], {self.g.graph_id: 1}, msg="Node[1] should be created!" )
+        self.assertEquals( self.g[2], {self.g.graph_id, 2}, msg="Node[2] should be created!" )
+
+        self.assertEquals( self.g[1][self.g.edges_attr], [0] )
+        self.assertEquals( self.g[2][self.g.edges_attr], [0] )
+
+        self.assertEquals( self.g[1][self.g.neigh_attr], [2])
+        self.assertEquals( self.g[2][self.g.neigh_attr], [1])
 
 
 if __name__ == '__main__':
