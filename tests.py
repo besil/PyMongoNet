@@ -118,9 +118,6 @@ class TestCoreMethods(unittest.TestCase):
     def test_incremental_add(self):
         self.g.add_edge(src=1, dst=2)
 
-        print(self.g)
-        print(self.g[1])
-
         self.assertEqual(self.g[1], {self.g.graph_id: 1, self.g.edges_attr: [0], self.g.neigh_attr: [2]}, msg="Node[1] should be created!")
         self.assertEqual(self.g[2], {self.g.graph_id: 2, self.g.edges_attr: [0], self.g.neigh_attr: [1]}, msg="Node[2] should be created!")
 
