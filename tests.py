@@ -1,10 +1,9 @@
 from pymongo import MongoClient
 
 from core import Graph, graph_collection, graph_edges
-
-__author__ = 'besil'
 import unittest
 
+__author__ = 'besil'
 
 class TestStringMethods(unittest.TestCase):
     def setUp(self):
