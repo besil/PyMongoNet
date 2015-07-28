@@ -23,7 +23,8 @@ def lines(filename, skip=lambda line: False, split=lambda line: line):
             if (count % batch_size == 0):
                 end = datetime.datetime.now()
                 print(
-                    "Consumed {} lines in {}.{}s".format(batch_size, (end - start).seconds, (end - start).microseconds),
+                    "Consumed {} lines in {}.{}s. So far: {}".format(batch_size, (end - start).seconds,
+                                                                     (end - start).microseconds, count),
                     end="\r")
                 start = datetime.datetime.now()
 
