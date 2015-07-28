@@ -27,7 +27,7 @@ class TestCoreMethods(unittest.TestCase):
             "name": "Silvio",
         }
         self.assertEqual(self.g[1], expected, msg="Node and expected are different!")
-        self.assertEquals(1, self.graph_coll.count({self.g.graph_id: 1}))
+        self.assertEqual(1, self.graph_coll.count({self.g.graph_id: 1}))
 
     def test_delete_node(self):
         self.g.add_node(id=1, name="Silvio")
@@ -35,12 +35,12 @@ class TestCoreMethods(unittest.TestCase):
 
         self.g.add_edge(src=1, dst=2)
 
-        self.assertEquals(1, self.graph_coll.count({self.g.graph_id: 1}))
-        self.assertEquals(2, self.graph_coll.count())
+        self.assertEqual(1, self.graph_coll.count({self.g.graph_id: 1}))
+        self.assertEqual(2, self.graph_coll.count())
 
         self.g.remove(id=1)
-        self.assertEquals(0, self.graph_coll.count({self.g.graph_id: 1}))
-        self.assertEquals(1, self.graph_coll.count())
+        self.assertEqual(0, self.graph_coll.count({self.g.graph_id: 1}))
+        self.assertEqual(1, self.graph_coll.count())
 
         self.assertFalse(self.g.contains(id=1))
         self.assertEqual(self.g[1], None, msg="Found something when nothing should be found")
@@ -52,12 +52,12 @@ class TestCoreMethods(unittest.TestCase):
         self.g.add_node(id=1, name="Silvio")
         self.g.add_node(id=2, name="Aurora")
 
-        self.assertEquals(1, self.graph_coll.count({self.g.graph_id: 1}))
-        self.assertEquals(1, self.graph_coll.count({self.g.graph_id: 2}))
-        self.assertEquals(2, self.graph_coll.count())
+        self.assertEqual(1, self.graph_coll.count({self.g.graph_id: 1}))
+        self.assertEqual(1, self.graph_coll.count({self.g.graph_id: 2}))
+        self.assertEqual(2, self.graph_coll.count())
 
         self.g.add_edge(src=1, dst=2, weight=1.0, rel_type="love")
-        self.assertEquals(1, self.graph_edges.count())
+        self.assertEqual(1, self.graph_edges.count())
         edge = self.g.get_edge(0)
 
         expected_edge = {
@@ -68,7 +68,7 @@ class TestCoreMethods(unittest.TestCase):
             "rel_type": "love"
         }
 
-        self.assertEquals(edge, expected_edge, msg="Edge[0] is different from expected!")
+        self.assertEqual(edge, expected_edge, msg="Edge[0] is different from expected!")
 
         silvio = self.g[1]
         aurora = self.g[2]
@@ -95,12 +95,12 @@ class TestCoreMethods(unittest.TestCase):
         self.assertEqual(self.g[1][self.g.neigh_attr], silvio_expected[self.g.neigh_attr])
         self.assertEqual(self.g[2][self.g.neigh_attr], aurora_expected[self.g.neigh_attr])
 
-        self.assertEquals(self.g[1][self.g.edges_attr], silvio_expected[self.g.edges_attr])
-        self.assertEquals(self.g[2][self.g.edges_attr], aurora_expected[self.g.edges_attr])
+        self.assertEqual(self.g[1][self.g.edges_attr], silvio_expected[self.g.edges_attr])
+        self.assertEqual(self.g[2][self.g.edges_attr], aurora_expected[self.g.edges_attr])
 
         expected_edge = {self.g.graph_id: 0, "src": 1, "dst": 2, "weight": 1.0, "rel_type": "love"}
-        self.assertEquals(self.g.get_edge(edgeId=0), expected_edge)
-        self.assertEquals(self.g.get_edge(edgeId=0), expected_edge)
+        self.assertEqual(self.g.get_edge(edgeId=0), expected_edge)
+        self.assertEqual(self.g.get_edge(edgeId=0), expected_edge)
 
     def test_nodes_it(self):
         self.g.add_node(id=1)
@@ -121,14 +121,14 @@ class TestCoreMethods(unittest.TestCase):
         print(self.g)
         print(self.g[1])
 
-        self.assertEquals(self.g[1], {self.g.graph_id: 1, self.g.edges_attr: [0], self.g.neigh_attr: [2]}, msg="Node[1] should be created!")
-        self.assertEquals(self.g[2], {self.g.graph_id: 2, self.g.edges_attr: [0], self.g.neigh_attr: [1]}, msg="Node[2] should be created!")
+        self.assertEqual(self.g[1], {self.g.graph_id: 1, self.g.edges_attr: [0], self.g.neigh_attr: [2]}, msg="Node[1] should be created!")
+        self.assertEqual(self.g[2], {self.g.graph_id: 2, self.g.edges_attr: [0], self.g.neigh_attr: [1]}, msg="Node[2] should be created!")
 
-        self.assertEquals(self.g[1][self.g.edges_attr], [0])
-        self.assertEquals(self.g[2][self.g.edges_attr], [0])
+        self.assertEqual(self.g[1][self.g.edges_attr], [0])
+        self.assertEqual(self.g[2][self.g.edges_attr], [0])
 
-        self.assertEquals(self.g[1][self.g.neigh_attr], [2])
-        self.assertEquals(self.g[2][self.g.neigh_attr], [1])
+        self.assertEqual(self.g[1][self.g.neigh_attr], [2])
+        self.assertEqual(self.g[2][self.g.neigh_attr], [1])
 
 
 if __name__ == '__main__':

@@ -37,7 +37,7 @@ class Graph(object):
     def add_node(self, id, **kwargs):
         d = kwargs
         d[self.graph_id] = id
-        self.graph.insert(d)
+        self.graph.insert_one(d)
 
     def add_edge(self, src, dst, **kwargs):
         d = kwargs
@@ -53,7 +53,7 @@ class Graph(object):
         for k, v in kwargs.items():
             edge_doc[k] = v
 
-        self.graph_edges.insert(edge_doc)
+        self.graph_edges.insert_one(edge_doc)
 
         self.graph.update_one({self.graph_id: src}, {"$push": {self.neigh_attr: dst}}, upsert=True)
         self.graph.update_one({self.graph_id: src}, {"$push": {self.edges_attr: edgeId}}, upsert=True)
