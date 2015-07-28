@@ -53,8 +53,11 @@ class Graph(object):
         self.graph.update_one({"_id": dst}, {"$push": {"neighs": src}})
         self.graph.update_one({"_id": dst}, {"$push": {"edges": {"node": src, "edge": edgeId}}})
 
-    def get_edge(self, id):
-        return self.graph_edges.find_one({"_id": id})
+    def are_connected(self, src, dst):
+        return dst in self[src]['neighs'] or src in self[dst]['neighs']
+
+    def get_edge(self, edgeId):
+        return self.graph_edges.find_one({"_id": edgeId})
 
     def __getitem__(self, id):
         return self.graph.find_one({"_id": id})

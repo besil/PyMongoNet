@@ -68,13 +68,13 @@ class TestStringMethods(unittest.TestCase):
             "_id": 1,
             "name": "Silvio",
             "neighs": [2],
-            "edges": {"node": 2, "edge": 0}
+            "edges": [{"node": 2, "edge": 0}]
         }
         aurora_expected = {
             "_id": 2,
             "name": "Aurora",
             "neighs": [1],
-            "edges": {"node": 1, "edge": 0}
+            "edges": [{"node": 1, "edge": 0}]
         }
 
         self.assertEqual(silvio, silvio_expected, msg="Silvio is different from the expected")
@@ -86,12 +86,12 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(self.g[1]["neighs"], [2])
         self.assertEqual(self.g[2]["neighs"], [1])
 
-        self.assertEquals(self.g[1]["edges"], [(2, 0)])
-        self.assertEquals(self.g[2]["edges"], [(1, 0)])
+        self.assertEquals(self.g[1]["edges"], [{"node": 2, "edge": 0}])
+        self.assertEquals(self.g[2]["edges"], [{"node": 1, "edge": 0}])
 
         expected_edge = {"_id": 0, "weight": 1.0, "rel_type": "love"}
-        self.assertEquals(self.g.get_edge(src=1, dst=2), expected_edge)
-        self.assertEquals(self.g.get_edge(src=2, dst=1), expected_edge)
+        self.assertEquals(self.g.get_edge(edgeId=0), expected_edge)
+        self.assertEquals(self.g.get_edge(edgeId=0), expected_edge)
 
 
 if __name__ == '__main__':
