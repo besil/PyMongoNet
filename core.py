@@ -75,3 +75,7 @@ class Graph(object):
             for edge in edges:
                 neigh_doc['edges'].remove(edge)
             self.graph.replace_one({"_id": neigh}, neigh_doc)
+
+    def nodes(self):
+        for n in self.graph.find():
+            yield n

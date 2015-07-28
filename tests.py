@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 
-from model import Graph, graph_collection, graph_edges
+from core import Graph, graph_collection, graph_edges
 
 __author__ = 'besil'
 import unittest
@@ -103,6 +103,24 @@ class TestStringMethods(unittest.TestCase):
         expected_edge = {"_id": 0, "src": 1, "dst": 2, "weight": 1.0, "rel_type": "love"}
         self.assertEquals(self.g.get_edge(edgeId=0), expected_edge)
         self.assertEquals(self.g.get_edge(edgeId=0), expected_edge)
+
+    def test_nodes_it(self):
+        self.g.add_node(id=1)
+        self.g.add_node(id=2)
+
+        expected_nodes = [{
+            "_id": 1,
+            "neighs": [],
+            "edges": []
+        }, {
+            "_id": 2,
+            "neighs": [],
+            "edges": []
+        }]
+
+        for n in self.g.nodes():
+            print(n)
+            # self.assertTrue(n in expected_nodes)
 
 
 if __name__ == '__main__':
