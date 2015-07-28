@@ -27,7 +27,6 @@ class TestStringMethods(unittest.TestCase):
             "neighs": []
         }
         self.assertEqual(self.g[1], expected, msg="Node and expected are different!")
-
         self.assertEquals(1, self.graph_coll.count({"_id": 1}))
 
     def test_delete_node(self):
