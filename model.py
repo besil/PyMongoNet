@@ -2,13 +2,6 @@ from pymongo import MongoClient
 
 __author__ = 'besil'
 
-class Nodes(object):
-    pass
-
-class Edges(object):
-    pass
-
-
 graph_collection = "graph"
 graph_edges = "edges"
 
