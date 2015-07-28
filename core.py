@@ -55,20 +55,17 @@ class Graph(object):
 
         self.graph_edges.insert(edge_doc)
 
-        self.graph.update_one({self.graph_id: src}, {"$push": {self.neigh_attr: dst}})
-        self.graph.update_one({self.graph_id: src}, {"$push": {self.edges_attr: edgeId}})
+        self.graph.update_one({self.graph_id: src}, {"$push": {self.neigh_attr: dst}}, upsert=True)
+        self.graph.update_one({self.graph_id: src}, {"$push": {self.edges_attr: edgeId}}, upsert=True)
 
-        self.graph.update_one({self.graph_id: dst}, {"$push": {self.neigh_attr: src}})
-        self.graph.update_one({self.graph_id: dst}, {"$push": {self.edges_attr: edgeId}})
+        self.graph.update_one({self.graph_id: dst}, {"$push": {self.neigh_attr: src}}, upsert=True)
+        self.graph.update_one({self.graph_id: dst}, {"$push": {self.edges_attr: edgeId}}, upsert=True)
 
     def are_connected(self, src, dst):
         return dst in self[src][self.neigh_attr] or src in self[dst][self.neigh_attr]
 
     def get_edge(self, edgeId):
         return self.graph_edges.find_one({self.graph_id: edgeId})
-
-    def __getitem__(self, id):
-        return self.graph.find_one({self.graph_id: id})
 
     def contains(self, id):
         return sum([1 for _ in self.graph.find({self.graph_id: id})]) == 1
@@ -94,3 +91,12 @@ class Graph(object):
     def nodes(self):
         for n in self.graph.find():
             yield n
+
+    def __getitem__(self, id):
+        return self.graph.find_one({self.graph_id: id})
+
+    def __str__(self):
+        res = ""
+        for n in self.nodes():
+            res += "{}: {}\n".format( n[self.graph_id], n[self.neigh_attr] )
+        return res

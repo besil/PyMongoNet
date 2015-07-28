@@ -1,11 +1,13 @@
+import unittest
+
 from pymongo import MongoClient
 
 from core import Graph, graph_collection, graph_edges
-import unittest
 
 __author__ = 'besil'
 
-class TestStringMethods(unittest.TestCase):
+
+class TestCoreMethods(unittest.TestCase):
     def setUp(self):
         self.db_name = "test_db"
         self.cl = MongoClient()
@@ -116,14 +118,17 @@ class TestStringMethods(unittest.TestCase):
     def test_incremental_add(self):
         self.g.add_edge(src=1, dst=2)
 
-        self.assertEquals( self.g[1], {self.g.graph_id: 1}, msg="Node[1] should be created!" )
-        self.assertEquals( self.g[2], {self.g.graph_id, 2}, msg="Node[2] should be created!" )
+        print(self.g)
+        print(self.g[1])
 
-        self.assertEquals( self.g[1][self.g.edges_attr], [0] )
-        self.assertEquals( self.g[2][self.g.edges_attr], [0] )
+        self.assertEquals(self.g[1], {self.g.graph_id: 1, self.g.edges_attr: [0], self.g.neigh_attr: [2]}, msg="Node[1] should be created!")
+        self.assertEquals(self.g[2], {self.g.graph_id: 2, self.g.edges_attr: [0], self.g.neigh_attr: [1]}, msg="Node[2] should be created!")
 
-        self.assertEquals( self.g[1][self.g.neigh_attr], [2])
-        self.assertEquals( self.g[2][self.g.neigh_attr], [1])
+        self.assertEquals(self.g[1][self.g.edges_attr], [0])
+        self.assertEquals(self.g[2][self.g.edges_attr], [0])
+
+        self.assertEquals(self.g[1][self.g.neigh_attr], [2])
+        self.assertEquals(self.g[2][self.g.neigh_attr], [1])
 
 
 if __name__ == '__main__':
